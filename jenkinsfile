@@ -1,0 +1,56 @@
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK17'
+        maven 'Maven'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Starting Java Project Pipeline...'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                sh 'java -cp target/classes StudentManagementSystem'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'SUCCESS: Java project built successfully!'
+        }
+
+        failure {
+            echo 'FAILURE: Build failed. Check the console output.'
+        }
+
+        always {
+            echo 'Jenkins Pipeline Execution Completed.'
+        }
+    }
+}
